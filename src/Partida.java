@@ -6,11 +6,16 @@ public class Partida {
     private Tablero tablero_inicial;
     private Tablero tablero_visual; // TODO: Limpiar Juego de Cartas innecesario (duplicado)
     private ArrayList<Movimiento> movimientos;
+    private EstadoPartida estado;
+    private enum EstadoPartida {
+        EN_CURSO, GANADA, PERDIDA
+    }
 
     public Partida(Tablero tablero) {
         this.tablero_inicial = tablero;
-        this.tablero_visual = new Tablero(tablero_inicial.getCuadricula(), tablero_inicial.getJuegoCartas());
+        this.tablero_visual = new Tablero(tablero_inicial.getCuadriculas(), tablero_inicial.getJuegoCartas());
         this.movimientos = new ArrayList<Movimiento>();
+        this.estado = EstadoPartida.EN_CURSO;
     }
 
     public Tablero getTableroInicial() {
@@ -18,6 +23,9 @@ public class Partida {
     }
     public Tablero getTableroPartida() {
         return tablero_visual;
+    }
+    public boolean haGanado() {
+        return estado == EstadoPartida.GANADA;
     }
    
     public ArrayList<Movimiento> getMovimientos() {
@@ -49,12 +57,18 @@ public class Partida {
 
     // Mostrar el tablero al inicio de la partida.
     public void restaurarAlInicio() {
-        tablero_visual = new Tablero(tablero_inicial.getCuadricula(), tablero_inicial.getJuegoCartas());
+        tablero_visual = new Tablero(tablero_inicial.getCuadriculas(), tablero_inicial.getJuegoCartas());
     }
 
     // Reiniciar todo.
     public void reiniciarPartida() {
         restaurarAlInicio();
         movimientos.clear();
+    }
+
+    public void finalizar() {
+        if (tablero_visual.esSolucion()) {
+            this.estado = EstadoPartida.GANADA;
+        } else this.estado = EstadoPartida.PERDIDA;
     }
 }

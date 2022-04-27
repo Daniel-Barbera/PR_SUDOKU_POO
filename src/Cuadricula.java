@@ -16,4 +16,8 @@ public class Cuadricula {
     public void mover(Movimiento mov) {
         cuadricula[mov.getFila()][mov.getColumna()] = mov.getFicha();
     }
+    
+    public int size() {
+        return cuadricula.length; 
+    }
 }

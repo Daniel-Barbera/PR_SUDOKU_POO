@@ -3,7 +3,6 @@ package src;
 /** @author Daniel Barbera */
 public class JuegoCartas {
     private Ficha[] fichas;
-
     public JuegoCartas(Ficha[] fichas) {
         this.fichas = fichas;
     }
@@ -11,5 +10,8 @@ public class JuegoCartas {
     // Para poder pinchar en las fichas del juego.
     public Ficha[] getFichas() {
         return fichas;
+    }
+    public int size() {
+        return fichas.length;
     }
 }

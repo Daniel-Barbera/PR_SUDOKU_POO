@@ -19,5 +19,5 @@ public class Movimiento {
     }
     public Ficha getFicha() {
         return ficha;
-    }    
+    }
 }

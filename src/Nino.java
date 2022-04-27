@@ -20,6 +20,7 @@ public class Nino {
     public int getNivel() {return nivel;}
     public int getNumPartGanadas() {return numPartGanadas;}
     public int getNumPartJugadas() {return numPartJugadas;}
+    public boolean tienePartida() {return partida != null;}
 
     public void setClase(String clase) {this.clase = clase;}
 
@@ -46,15 +47,29 @@ public class Nino {
     }
     
     public Partida jugar() {
-        if (partida == null) {
-            throw new Exception("¡No tienes una partida guardada! Escoge un nivel.");
-            return null;
+        if (!tienePartida()) {
+            crearPartidaNueva();
+            return partida;
         }
+        incrPartidasJugadas();
         return partida;
     }
 
+    public void finalizarPartida() {
+        partida.finalizar();
+        if (partida.haGanado()) {
+            incrPartidasGanadas();
+        }
+        partida = null;
+    }
 
-    private Tablero leerFichero() {
-        // TODO: Leer fichero
+    public void guardarPartida() {
+
+    }
+
+    private Tablero crearPartidaNueva() {
+        String rutaFichero = "rutaFichero/plantilla_" + nivel + ".txt";
+        // TODO: Leer fichero, codificar nivel
+        return tablero;
     }
 }
