@@ -2,15 +2,14 @@ package src;
 import java.util.ArrayList;
 import java.io.*;
 
-// Autores: Daniel Barbera
-
+/** @author Daniel Barbera */
 class SudokuNino {
     private ArrayList<Partida> partidas;
     private ArrayList<Clase> aulasColegio;
     
     public SudokuNino() {
-        partidas = new ArrayList<>();
-        aulasColegio = new ArrayList<>();
+        partidas = new ArrayList<Partida>();
+        aulasColegio = new ArrayList<Clase>();
     }
 
     public void backUp() {
@@ -38,11 +37,10 @@ class SudokuNino {
     }
 
     public void jugarPartidaNino(Nino nino, Partida partida) {
-        // Posible idea
+        // TODO: Fix polimorfismo de método
         if (partida == null) {
-            partida = new Partida(nino);
+            partida = nino.crearPartida();
             partidas.add(partida);
         }
-        partida.jugar();
     }
 }

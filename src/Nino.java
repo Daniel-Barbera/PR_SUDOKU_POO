@@ -1,15 +1,18 @@
 package src;
 import java.security.SecureRandom;
 
+/** @author Daniel Barbera */
 public class Nino {
     private final int usuario;
     private String clase; 
     private int nivel, numPartGanadas, numPartJugadas;
+    private Partida partida; // TODO: Manejar 
 
     public Nino(String clase) {
         SecureRandom rand = new SecureRandom(); 
         usuario = rand.nextInt(0x3f3f3f3f);
         this.clase = clase;
+        partida = null;
     } 
 
     public int getUsuario() {return usuario;}
@@ -41,5 +44,17 @@ public class Nino {
         return "Nino [clase=" + clase + ", nivel=" + nivel + ", numPartGanadas=" + numPartGanadas + ", numPartJugadas="
                 + numPartJugadas + ", usuario=" + usuario + "]";
     }
+    
+    public Partida jugar() {
+        if (partida == null) {
+            throw new Exception("¡No tienes una partida guardada! Escoge un nivel.");
+            return null;
+        }
+        return partida;
+    }
 
+
+    private Tablero leerFichero() {
+        // TODO: Leer fichero
+    }
 }

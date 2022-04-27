@@ -1,8 +1,10 @@
 package src;
 import java.util.HashSet; 
+
+/** @author Daniel Barbera */
 public class Clase {
     private HashSet<Nino> ninosClase; // <- numNinosClase == ninosClase.size()
-    private HashSet<String> profesoresClase; // <Profesor> ?? 
+    private HashSet<String> profesoresClase; 
     public Clase() {
         ninosClase = new HashSet<>();
         profesoresClase = new HashSet<>();
@@ -22,11 +24,16 @@ public class Clase {
         return true;
     }
 
-    // ???????????????????
+    
     public boolean actualizaNino(Nino nino) {
+        // TODO: Implementar estados de partida para método
+        // Cambiar todos los datos tras terminar una partida
         return true;
     }
+    
+    
     public boolean actualizaProfesor(String profesor) {
+        // TODO: Preguntar a Estefanía
         return true;
     }
 }
