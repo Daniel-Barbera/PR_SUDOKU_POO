@@ -17,8 +17,8 @@ public class Clase implements Serializable {
     public String getNombre() {
         return nombre;
     }
-    public HashSet<Nino> getNinosClase() {
-        return ninosClase;
+    public Nino[] getNinosClase() {
+        return ninosClase.toArray(new Nino[ninosClase.size()]);
     }
     public String getProfesor() {
         return profesor;

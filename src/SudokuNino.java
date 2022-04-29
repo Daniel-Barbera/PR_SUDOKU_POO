@@ -24,8 +24,7 @@ class SudokuNino implements Serializable {
         return aulasColegio;
     }
 
-    public boolean anyadirClase(String nombre, String nombreProfesor) {
-        Clase clase = new Clase(nombre, nombreProfesor);
+    public boolean anyadirClase(Clase clase) {
         if (!aulasColegio.add(clase)) {
             return false;
         }
@@ -39,9 +38,11 @@ class SudokuNino implements Serializable {
             this.siguienteIdUsuario = Nino.getSiguienteIdUsuario();
             // Crear bck
             String div = System.getProperty("file.separator");
-            DateTimeFormatter fechaFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm");
+            DateTimeFormatter fechaFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm-ss");
             LocalDateTime fecha = LocalDateTime.now();
-            String rutaFichero = "bck" + div + fechaFormatter.format(fecha) + ".bck"; 
+            String rutaFichero = "src" + div + "bck" + div + fechaFormatter.format(fecha) + ".bck";
+            File file = new File(rutaFichero);
+            file.createNewFile();
             ObjectOutputStream objectWriter = new ObjectOutputStream(new FileOutputStream(rutaFichero));
             objectWriter.writeObject(this);
             objectWriter.close();
@@ -84,6 +85,8 @@ class SudokuNino implements Serializable {
         if (partida == null || partida.haFinalizado()) {
             nino.incrPartidasJugadas();
             partida = crearPartida(nino.getNivel());
+            if (!partidas.keySet().contains(nino)) 
+                partidas.put(nino, new ArrayList<>());
             partidas.get(nino).add(partida);
         }
         return partida;
@@ -92,7 +95,7 @@ class SudokuNino implements Serializable {
 
     private Partida crearPartida(int nivel) {
         String div = System.getProperty("file.separator");
-        String rutaFichero = "plantillas" + div + "plantilla_" + String.format("%0d", nivel) + ".txt";
+        String rutaFichero = "src" + div + "plantillas" + div + "Plantilla" + String.format("%02d", nivel) + ".txt";
         Partida partida = null;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(rutaFichero));

@@ -6,12 +6,14 @@ public class Nino implements Comparable<Nino>, Serializable {
     public static final int NIVEL_MAXIMO = 14;
     public static int siguienteIdUsuario;
     private final int usuario;
-    private String clase; 
+    private String clase;
+    private final String nombre; 
     private int nivel, numPartGanadas, numPartJugadas;
     // Guardar attr. con id no estático
 
-    public Nino () {
+    public Nino (String nombre) {
         this.usuario = siguienteIdUsuario;
+        this.nombre = nombre;
         ++siguienteIdUsuario; 
         this.nivel = 1;
     } 
@@ -27,6 +29,9 @@ public class Nino implements Comparable<Nino>, Serializable {
     }
     public int getNivelMaximo() {
         return NIVEL_MAXIMO;
+    }
+    public String getNombre() {
+        return nombre;
     }
     public int getNumPartidasGanadas() {
         return numPartGanadas;
