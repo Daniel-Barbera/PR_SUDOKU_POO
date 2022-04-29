@@ -1,32 +1,60 @@
 package src;
+import java.io.Serializable;
 import java.security.SecureRandom;
 
 /** @author Daniel Barbera */
-public class Nino {
+public class Nino implements Comparable<Nino>, Serializable {
+    // TODO: Preguntar a Estefanía si los niños tienen nombre (para la interfaz?)
+    public static final int NIVEL_MAXIMO = 14;
     private final int usuario;
     private String clase; 
     private int nivel, numPartGanadas, numPartJugadas;
-    private Partida partida; // TODO: Manejar 
 
     public Nino(String clase) {
         SecureRandom rand = new SecureRandom(); 
-        usuario = rand.nextInt(0x3f3f3f3f);
+        this.usuario = rand.nextInt(0x3f3f3f3f);
+        this.nivel = 1;
         this.clase = clase;
-        partida = null;
     } 
 
-    public int getUsuario() {return usuario;}
-    public String getClase() {return clase;}
-    public int getNivel() {return nivel;}
-    public int getNumPartGanadas() {return numPartGanadas;}
-    public int getNumPartJugadas() {return numPartJugadas;}
-    public boolean tienePartida() {return partida != null;}
+    public int getUsuario() {
+        return usuario;
+    }
+    public String getClase() {
+        return clase;
+    }
+    public int getNivel() {
+        return nivel;
+    }
+    public int getNivelMaximo() {
+        return NIVEL_MAXIMO;
+    }
+    public int getNumPartidasGanadas() {
+        return numPartGanadas;
+    }
+    public int getNumPartidasJugadas() {
+        return numPartJugadas;
+    }
 
     public void setClase(String clase) {this.clase = clase;}
 
-    public void incrNivel(){++nivel;}
+    public boolean incrNivel() {
+        if (nivel < NIVEL_MAXIMO) {
+            ++nivel;
+            return true;
+        }
+        return false;
+    }
     public void incrPartidasGanadas(){++numPartGanadas;}
     public void incrPartidasJugadas(){++numPartJugadas;}
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + usuario;
+        return result;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -37,7 +65,9 @@ public class Nino {
         if (getClass() != obj.getClass())
             return false;
         Nino other = (Nino) obj;
-        return other.usuario == usuario; 
+        if (usuario != other.usuario)
+            return false;
+        return true;
     }
 
     @Override
@@ -46,30 +76,9 @@ public class Nino {
                 + numPartJugadas + ", usuario=" + usuario + "]";
     }
     
-    public Partida jugar() {
-        if (!tienePartida()) {
-            crearPartidaNueva();
-            return partida;
-        }
-        incrPartidasJugadas();
-        return partida;
-    }
 
-    public void finalizarPartida() {
-        partida.finalizar();
-        if (partida.haGanado()) {
-            incrPartidasGanadas();
-        }
-        partida = null;
-    }
-
-    public void guardarPartida() {
-
-    }
-
-    private Tablero crearPartidaNueva() {
-        String rutaFichero = "rutaFichero/plantilla_" + nivel + ".txt";
-        // TODO: Leer fichero, codificar nivel
-        return tablero;
+    @Override
+    public int compareTo(Nino other) {
+        return Integer.compare(this.usuario, other.usuario);
     }
 }

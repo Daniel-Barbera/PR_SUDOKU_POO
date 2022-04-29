@@ -1,7 +1,9 @@
 package src;
 
+import java.io.Serializable;
+
 /** @author Daniel Barbera */
-public class Ficha {
+public class Ficha implements Serializable {
     private String img;
     private Carta carta;
 

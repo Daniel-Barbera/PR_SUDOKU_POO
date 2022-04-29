@@ -1,20 +1,13 @@
 package src;
+import java.io.Serializable;
 import java.util.Map;
 
 /** @author Daniel Barbera */
-public class Carta {
-    private enum TipoCarta {
-        ESTRELLA, CIRCULO, ROMBO, TRIANGULO,
-        UNO, DOS, TRES, CUATRO,
-        HIPPO, RANA, LEON, CERDO, POLLITO, GATO,
-        NULA
-    }
-    private enum TipoConjunto {
-        ANIMALES, FIGURAS, NUMEROS, NINGUNO
-    }
+public class Carta implements Serializable {
     private TipoCarta tipo;
     private TipoConjunto conjunto;
     // El método Map.of() hace que los siguientes mapas sean inmutables.
+    // TODO: Decidir si buscar imágenes por internet o usar las incluidas.
     private static final Map<TipoCarta, String> FIGURAS = Map.of(
         TipoCarta.ESTRELLA, "<ruta a imagen>",
         TipoCarta.CIRCULO, "<ruta a imagen>",
@@ -36,6 +29,15 @@ public class Carta {
         TipoCarta.GATO, "<ruta a imagen>"
     );
 
+
+    public Carta (TipoCarta tipo) {
+        this.tipo = tipo;
+        if (FIGURAS.containsKey(tipo)) this.conjunto = TipoConjunto.FIGURAS;
+        else if (NUMEROS.containsKey(tipo)) this.conjunto = TipoConjunto.NUMEROS;
+        else if (ANIMALES.containsKey(tipo)) this.conjunto = TipoConjunto.ANIMALES;
+        else this.conjunto = TipoConjunto.NINGUNO;
+    }
+
     public Carta(char c, TipoConjunto conjunto) {
         this.conjunto = conjunto;
 
@@ -52,7 +54,7 @@ public class Carta {
                         this.tipo = TipoCarta.ROMBO;
                         break;
                     case 'T':
-                        this.tipo = TipoCarta.ROMBO;
+                        this.tipo = TipoCarta.TRIANGULO;
                         break;
                 }
                 break;
@@ -110,16 +112,6 @@ public class Carta {
     }
     public static Map<TipoCarta, String> getAnimales() {
         return ANIMALES;
-    }
-
-    public boolean esFigura() {
-        return conjunto.equals(TipoConjunto.FIGURAS);
-    }
-    public boolean esAnimal() {
-        return conjunto.equals(TipoConjunto.ANIMALES);
-    }
-    public boolean esNumero() {
-        return conjunto.equals(TipoConjunto.NUMEROS);
     }
 
     public String getImagen() {

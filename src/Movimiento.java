@@ -1,7 +1,9 @@
 package src;
 
+import java.io.Serializable;
+
 /** @author Daniel Barbera */
-public class Movimiento {
+public class Movimiento implements Serializable {
     private int fila, columna;
     private Ficha ficha; // puede ser NULA!
 
