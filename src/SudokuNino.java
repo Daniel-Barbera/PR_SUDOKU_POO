@@ -2,31 +2,30 @@ package src;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TreeMap;
-
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /** @author Daniel Barbera */
 class SudokuNino implements Serializable {
-    // TODO: Preguntar a Estefanía si se pueden almacenar varias partidas por niño.
-    // TODO: Preguntar a Estefanía si los niños pueden tener más de una partida pendiente.
-    // Podría pasar a ser TreeMap<Nino, ArrayList<Partida>> si se requiere almacenar
-    // varias partidas por niño. 
-    private TreeMap<Nino, Partida> partidas;
+    private TreeMap<Nino, ArrayList<Partida>> partidas;
     private HashSet<Clase> aulasColegio;
+    private int siguienteId, siguienteIdUsuario;
     
     public SudokuNino() {
-        partidas = new TreeMap<Nino, Partida>();
+        partidas = new TreeMap<Nino, ArrayList<Partida>>();
         aulasColegio = new HashSet<Clase>();
     }
 
-    public TreeMap<Nino, Partida> getPartidas() {
+    public TreeMap<Nino, ArrayList<Partida>> getPartidas() {
         return partidas;
     }
     public HashSet<Clase> getAulasColegio() {
         return aulasColegio;
     }
 
-    public boolean anyadirClase(Clase clase) {
+    public boolean anyadirClase(String nombre, String nombreProfesor) {
+        Clase clase = new Clase(nombre, nombreProfesor);
         if (!aulasColegio.add(clase)) {
             return false;
         }
@@ -35,7 +34,15 @@ class SudokuNino implements Serializable {
 
     public void backUp() {
         try {
-            ObjectOutputStream objectWriter = new ObjectOutputStream(new FileOutputStream("/rutaMiFicheroBackup/nombreFich.bck"));
+            // Tratamiento variables estáticas
+            this.siguienteId = Tablero.getSiguienteId();
+            this.siguienteIdUsuario = Nino.getSiguienteIdUsuario();
+            // Crear bck
+            String div = System.getProperty("file.separator");
+            DateTimeFormatter fechaFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm");
+            LocalDateTime fecha = LocalDateTime.now();
+            String rutaFichero = "bck" + div + fechaFormatter.format(fecha) + ".bck"; 
+            ObjectOutputStream objectWriter = new ObjectOutputStream(new FileOutputStream(rutaFichero));
             objectWriter.writeObject(this);
             objectWriter.close();
         } catch (Exception e) {
@@ -44,34 +51,50 @@ class SudokuNino implements Serializable {
         }
     }
 
-    public void restaurarBck(String file) {
+    public void restaurarBck(String filePath) {
         try {
-            ObjectInputStream objectReader = new ObjectInputStream(new FileInputStream(file));
+            ObjectInputStream objectReader = new ObjectInputStream(new FileInputStream(filePath));
             SudokuNino bck = (SudokuNino) objectReader.readObject();
             objectReader.close();
             this.partidas = bck.partidas;
-            this.aulasColegio = bck.aulasColegio; 
+            this.aulasColegio = bck.aulasColegio;
+            this.siguienteId = bck.siguienteId;
+            this.siguienteIdUsuario = bck.siguienteIdUsuario;
+            Nino.setSiguienteIdUsuario(this.siguienteIdUsuario);
+            Tablero.setSiguienteId(this.siguienteId); 
         } catch (Exception e) {
             // TODO: Ajustar esta sección del código para manejar las excepciones por separado
             e.printStackTrace();
         } 
     }
+ 
+    public ArrayList<Partida> getPartidasEnCurso(Nino nino) {
+        ArrayList<Partida> partidasEnCurso = new ArrayList<Partida>(), partidasNino = partidas.get(nino);
+        for (Partida partida: partidasNino) {
+            if (!partida.haFinalizado()) partidasEnCurso.add(partida);
+        }
+        return partidasEnCurso;
+    }
 
     public Partida jugarPartidaNino(Nino nino, Partida partida) {
-        // TODO: Preguntar a Estefanía si los niños pueden escoger nivel
+        // TODO: Hacer muestra de niños con niveles distintos
+        /** Pasar null cuando se desee jugar una partida nueva, o 
+         * una instancia de partida cuando se desee jugar a esa.
+         */
         if (partida == null || partida.haFinalizado()) {
             nino.incrPartidasJugadas();
             partida = crearPartida(nino.getNivel());
-            partidas.put(nino, partida);
+            partidas.get(nino).add(partida);
         }
         return partida;
     }
 
+
     private Partida crearPartida(int nivel) {
-        String rutaFichero = "rutaPlantillas/plantilla_" + String.format("%0d", nivel) + ".txt";
+        String div = System.getProperty("file.separator");
+        String rutaFichero = "plantillas" + div + "plantilla_" + String.format("%0d", nivel) + ".txt";
         Partida partida = null;
         try {
-            // TODO: Preguntar a Estefanía si se necesita el nombre para algo
             BufferedReader reader = new BufferedReader(new FileReader(rutaFichero));
             String line;
 
@@ -143,14 +166,7 @@ class SudokuNino implements Serializable {
         partida.finalizar();
         if (partida.haGanado()) {
             nino.incrPartidasGanadas();
-            // TODO: Preguntar a Estefanía / Decidir qué hacer cuando el niño llega al nivel máximo
-            nino.incrNivel();
+            nino.incrNivel();   // <- Posible bug al jugar el mismo nivel varias veces
         }
-        partida = null;
-    }
-
-    public void guardarPartida() {
-        /** Éste método existe por semántica. No hace nada. */
-        return;
     }
 }

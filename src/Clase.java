@@ -5,13 +5,13 @@ import java.util.HashSet;
 /** @author Daniel Barbera */
 public class Clase implements Serializable {
     private final String nombre;
-    private HashSet<Nino> ninosClase; // <- numNinosClase == ninosClase.size()
-    private HashSet<String> profesoresClase; 
+    private HashSet<Nino> ninosClase;
+    private String profesor;
 
-    public Clase(String nombre) {
+    public Clase(String nombre, String nombreProfesor) {
         this.nombre = nombre;
-        ninosClase = new HashSet<>();
-        profesoresClase = new HashSet<>();
+        this.ninosClase = new HashSet<>();
+        this.profesor = nombreProfesor;
     }
 
     public String getNombre() {
@@ -20,25 +20,24 @@ public class Clase implements Serializable {
     public HashSet<Nino> getNinosClase() {
         return ninosClase;
     }
-    public HashSet<String> getProfesoresClase() {
-        return profesoresClase;
+    public String getProfesor() {
+        return profesor;
     }
 
-    public int numPartidasJugadas() {
+    public float mediaPartidasEchadasXNino() {
         int partidasJugadas = 0;
         for (Nino nino: ninosClase) {
             partidasJugadas += nino.getNumPartidasJugadas();
         }
-        return partidasJugadas;
+        return Math.round((float) partidasJugadas / numNinosClase());
     }
     
-    public float mediaPartidasGanadas() {
-        int partidasJugadas = 0, partidasGanadas = 0;
+    public float mediaPartidasGanadasXNino() {
+        int partidasGanadas = 0;
         for (Nino nino: ninosClase) {
-            partidasJugadas += nino.getNumPartidasJugadas();
             partidasGanadas += nino.getNumPartidasGanadas();
         }
-        return Math.round((float) partidasGanadas / (float) partidasJugadas);
+        return Math.round((float) partidasGanadas / numNinosClase());
     }
 
     public int numNinosClase() {
@@ -46,24 +45,29 @@ public class Clase implements Serializable {
     }
 
     public boolean altaNino(Nino nino) {
-        if (nino.getClase() != nombre) return false;
-        if (!ninosClase.add(nino)) return false;
-        return true; 
+        if (nino.getClase() != null) return false; // El niño ya tiene clase
+        if (!ninosClase.add(nino)) return false; // El niño ya está en la clase
+        nino.setClase(this.nombre);
+        return true;  
     }
 
     public boolean bajaNino(Nino nino) {
         if (!ninosClase.remove(nino)) return false;
+        nino.setClase(null);
         return true;
     }
 
     public boolean altaProfesor(String nombre) {
-        if (!profesoresClase.add(nombre)) return false;
-        return true;
+        if (this.profesor != null) {
+            this.profesor = nombre;
+            return true;
+        }
+        return false;
     }
 
     public boolean actualizaNino(Nino nino) {
-        // TODO: Preguntar a Estefanía para qué sirve este método
-        // ¿Cambiar todos los datos tras terminar una partida?
+        ninosClase.remove(nino);
+        ninosClase.add(nino);
         return true;
     }
     
@@ -93,7 +97,10 @@ public class Clase implements Serializable {
     }
 
     public boolean actualizaProfesor(String profesor) {
-        // TODO: Preguntar a Estefanía en qué consiste un profesor, y para qué serviría este método
-        return true;
+        if (profesor != null && !profesor.isBlank()) {
+            this.profesor = profesor;
+            return true;
+        }
+        return false; 
     }
 }

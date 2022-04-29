@@ -1,20 +1,19 @@
 package src;
 import java.io.Serializable;
-import java.security.SecureRandom;
 
 /** @author Daniel Barbera */
 public class Nino implements Comparable<Nino>, Serializable {
-    // TODO: Preguntar a Estefanía si los niños tienen nombre (para la interfaz?)
     public static final int NIVEL_MAXIMO = 14;
+    public static int siguienteIdUsuario;
     private final int usuario;
     private String clase; 
     private int nivel, numPartGanadas, numPartJugadas;
+    // Guardar attr. con id no estático
 
-    public Nino(String clase) {
-        SecureRandom rand = new SecureRandom(); 
-        this.usuario = rand.nextInt(0x3f3f3f3f);
+    public Nino () {
+        this.usuario = siguienteIdUsuario;
+        ++siguienteIdUsuario; 
         this.nivel = 1;
-        this.clase = clase;
     } 
 
     public int getUsuario() {
@@ -35,8 +34,15 @@ public class Nino implements Comparable<Nino>, Serializable {
     public int getNumPartidasJugadas() {
         return numPartJugadas;
     }
-
-    public void setClase(String clase) {this.clase = clase;}
+    public static int getSiguienteIdUsuario() {
+        return siguienteIdUsuario;
+    }
+    public static void setSiguienteIdUsuario(int siguienteIdUsuario) {
+        Nino.siguienteIdUsuario = siguienteIdUsuario;
+    }
+    public void setClase(String clase) {
+        this.clase = clase;
+    }
 
     public boolean incrNivel() {
         if (nivel < NIVEL_MAXIMO) {
@@ -76,7 +82,6 @@ public class Nino implements Comparable<Nino>, Serializable {
                 + numPartJugadas + ", usuario=" + usuario + "]";
     }
     
-
     @Override
     public int compareTo(Nino other) {
         return Integer.compare(this.usuario, other.usuario);
