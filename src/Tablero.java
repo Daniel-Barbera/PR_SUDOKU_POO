@@ -15,6 +15,21 @@ public class Tablero implements Serializable {
         ++siguienteId;
     }
 
+    public Tablero(Tablero otro) {
+        this.cuadriculas = new Cuadricula[otro.cuadriculas.length][];
+        for (int i = 0; i < otro.cuadriculas.length; ++i) {
+            Cuadricula[] filaCuadriculasOtro = otro.cuadriculas[i];
+            this.cuadriculas[i] = new Cuadricula[otro.cuadriculas[0].length];
+
+            for (int j = 0; j < filaCuadriculasOtro.length; ++j) {
+                this.cuadriculas[i][j] = new Cuadricula(filaCuadriculasOtro[j]);
+            }
+        }
+        this.juegoCartas = otro.juegoCartas;
+        this.id = siguienteId;
+        ++siguienteId;
+    }
+
     public Cuadricula[][] getCuadriculas() {
         return cuadriculas;
     }    
@@ -31,7 +46,7 @@ public class Tablero implements Serializable {
     public void mover(Movimiento mov) {
         int altoCuadricula = cuadriculas[0][0].getAlto(), anchoCuadricula = cuadriculas[0][0].getAncho(); 
         Movimiento movAux = new Movimiento(mov.getFila() % anchoCuadricula, mov.getColumna() % altoCuadricula, mov.getFicha());
-        Cuadricula cuadricula = cuadriculas[mov.getFila() % cuadriculas.length][movAux.getColumna() % cuadriculas.length];
+        Cuadricula cuadricula = cuadriculas[mov.getFila() % cuadriculas.length][movAux.getColumna() % cuadriculas[0].length];
         cuadricula.mover(movAux);
     }
     

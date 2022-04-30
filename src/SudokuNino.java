@@ -118,6 +118,7 @@ class SudokuNino implements Serializable {
                 case "H,R,L,C,P,G":
                     jCartas = new JuegoCartas(TipoConjunto.ANIMALES);
                     break;
+                default:
             }
             
             // Crear matriz de fichas
@@ -128,7 +129,12 @@ class SudokuNino implements Serializable {
                 ArrayList<Ficha> filaFichas = new ArrayList<>();
                 filaFichasLeida = line.split(",");
                 for (String codificacionFicha: filaFichasLeida) {
-                    Ficha ficha = new Ficha(new Carta(codificacionFicha.charAt(0), conjunto));
+                    Ficha ficha = null;
+                    if (codificacionFicha.charAt(0) == '-') {
+                        ficha = new Ficha(new Carta(codificacionFicha.charAt(0), TipoConjunto.NINGUNO));
+                    } else {
+                        ficha = new Ficha(new Carta(codificacionFicha.charAt(0), conjunto));
+                    }
                     filaFichas.add(ficha);
                 }
                 matrizFichas.add(filaFichas);
@@ -142,7 +148,7 @@ class SudokuNino implements Serializable {
                 
                 ArrayList<Ficha> filaSuperior = matrizFichas.get(i), filaInferior = matrizFichas.get(i+1);
                 fichasCuadriculaIzq[0] = filaSuperior.subList(0, numFichasCuadricula/2).toArray(new Ficha[numFichasCuadricula/2]);
-                fichasCuadriculaDer[0] = filaSuperior.subList(numFichasCuadricula, filaSuperior.size()).toArray(new Ficha[numFichasCuadricula/2]);
+                fichasCuadriculaDer[0] = filaSuperior.subList(numFichasCuadricula/2, filaSuperior.size()).toArray(new Ficha[numFichasCuadricula/2]);
                 fichasCuadriculaIzq[1] = filaInferior.subList(0, numFichasCuadricula/2).toArray(new Ficha[numFichasCuadricula/2]);
                 fichasCuadriculaDer[1] = filaInferior.subList(numFichasCuadricula/2, filaInferior.size()).toArray(new Ficha[numFichasCuadricula/2]);
                 
@@ -153,8 +159,12 @@ class SudokuNino implements Serializable {
             }
             
             // Crear tablero a partir de matriz de cuadrículas y juego de cartas
-            Cuadricula[][] cuadricula = cuadriculas.toArray(new Cuadricula[cuadriculas.size()][cuadriculas.get(0).size()]);
-            Tablero tablero = new Tablero(cuadricula, jCartas);
+            Cuadricula[][] cuadriculasTablero = new Cuadricula[cuadriculas.size()][];
+            for (int i = 0; i < cuadriculas.size(); ++i) {
+                ArrayList<Cuadricula> filaCuadriculas = cuadriculas.get(i);
+                cuadriculasTablero[i] = cuadriculas.get(i).toArray(new Cuadricula[filaCuadriculas.size()]);
+            }
+            Tablero tablero = new Tablero(cuadriculasTablero, jCartas);
             partida = new Partida(tablero);
             reader.close();
         } catch (Exception e) {

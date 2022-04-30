@@ -29,7 +29,6 @@ public class Carta implements Serializable {
         TipoCarta.GATO, "<ruta a imagen>"
     );
 
-
     public Carta (TipoCarta tipo) {
         this.tipo = tipo;
         if (FIGURAS.containsKey(tipo)) this.conjunto = TipoConjunto.FIGURAS;
@@ -73,6 +72,7 @@ public class Carta implements Serializable {
                         this.tipo = TipoCarta.CUATRO;
                         break;
                 }
+                break;
             case ANIMALES:
                 switch(c) {
                     case 'H':
@@ -94,9 +94,10 @@ public class Carta implements Serializable {
                         this.tipo = TipoCarta.GATO;
                         break;
                 }
-                default:
-                    this.tipo = TipoCarta.NULA;
-                    break;
+                break;
+            default:
+                this.tipo = TipoCarta.NULA;
+                break;
             }
     }
 

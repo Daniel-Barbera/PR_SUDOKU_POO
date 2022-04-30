@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 /** @author Daniel Barbera */
 public class Partida implements Serializable {
-    private Tablero tablero_inicial;
-    private Tablero tablero_visual;
+    private Tablero tableroInicial;
+    private Tablero tableroVisual;
     private ArrayList<Movimiento> movimientos;
     private EstadoPartida estado;
     private enum EstadoPartida {
@@ -13,17 +13,17 @@ public class Partida implements Serializable {
     }
 
     public Partida(Tablero tablero) {
-        this.tablero_inicial = tablero;
-        this.tablero_visual = new Tablero(tablero_inicial.getCuadriculas(), new JuegoCartas(TipoConjunto.NINGUNO));
+        this.tableroInicial = tablero;
+        this.tableroVisual = new Tablero(tableroInicial);
         this.movimientos = new ArrayList<Movimiento>();
         this.estado = EstadoPartida.EN_CURSO;
     }
 
     public Tablero getTableroInicial() {
-        return tablero_inicial;
+        return tableroInicial;
     }
-    public Tablero getTableroPartida() {
-        return tablero_visual;
+    public Tablero getTableroVisual() {
+        return tableroVisual;
     }
     public ArrayList<Movimiento> getMovimientos() {
         return movimientos;
@@ -38,7 +38,7 @@ public class Partida implements Serializable {
 
     public void mover(Movimiento mov) {
         movimientos.add(mov);
-        tablero_visual.mover(mov);
+        tableroVisual.mover(mov);
     }
 
     public void volverAtras(int cantidad_movimientos) {
@@ -47,7 +47,7 @@ public class Partida implements Serializable {
         if (cantidad_movimientos >= movimientos.size()) 
             throw new IndexOutOfBoundsException("Cantidad de movimientos superior a los existentes.");
         for (int i = 0; i < cantidad_movimientos; ++i) {
-            tablero_visual.mover(movimientos.get(i));
+            tableroVisual.mover(movimientos.get(i));
         }
     }
 
@@ -56,7 +56,7 @@ public class Partida implements Serializable {
          * devolverse al estado "final".
          */
         for (Movimiento mov: movimientos) {
-            tablero_visual.mover(mov);
+            tableroVisual.mover(mov);
         }
     }
 
@@ -65,7 +65,7 @@ public class Partida implements Serializable {
          * pero no se olvidan los movimientos realizados, siendo posible
          * llamar a restaurarAlFinal().
         */
-        tablero_visual = new Tablero(tablero_inicial.getCuadriculas(), tablero_inicial.getJuegoCartas());
+        tableroVisual = new Tablero(tableroInicial);
     }
 
     public void reiniciarPartida() {
@@ -77,7 +77,7 @@ public class Partida implements Serializable {
     public void finalizar() {
         /** Método para marcar una partida como FINALIZADA. */
         restaurarAlFinal();
-        if (tablero_visual.esSolucion()) {
+        if (tableroVisual.esSolucion()) {
             this.estado = EstadoPartida.GANADA;
         } else this.estado = EstadoPartida.PERDIDA;
     }
