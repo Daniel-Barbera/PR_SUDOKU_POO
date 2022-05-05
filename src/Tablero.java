@@ -45,8 +45,11 @@ public class Tablero implements Serializable {
 
     public void mover(Movimiento mov) {
         int altoCuadricula = cuadriculas[0][0].getAlto(), anchoCuadricula = cuadriculas[0][0].getAncho(); 
-        Movimiento movAux = new Movimiento(mov.getFila() % anchoCuadricula, mov.getColumna() % altoCuadricula, mov.getFicha());
-        Cuadricula cuadricula = cuadriculas[mov.getFila() % cuadriculas.length][movAux.getColumna() % cuadriculas[0].length];
+        Movimiento movAux = new Movimiento(mov.getColumna() % anchoCuadricula, mov.getFila() % altoCuadricula, mov.getFicha());
+        int idxHorizontalCuadricula, idxVerticalCuadricula;
+        idxHorizontalCuadricula = mov.getColumna() / anchoCuadricula;
+        idxVerticalCuadricula = mov.getFila() / altoCuadricula;
+        Cuadricula cuadricula = cuadriculas[idxHorizontalCuadricula][idxVerticalCuadricula];
         cuadricula.mover(movAux);
     }
     

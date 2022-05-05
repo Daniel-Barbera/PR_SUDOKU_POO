@@ -28,6 +28,17 @@ public class Main {
                 }
             }
             System.out.println("fin");
+            partida.volverAtras(2);
+            for (Cuadricula[] c: partida.getTableroVisual().getCuadriculas()) {
+                for (Cuadricula cuadricula : c) {
+                    for (Ficha[] fichas: cuadricula.getFichas()) {
+                        for (Ficha ficha: fichas) {
+                            System.out.println(ficha.getCarta().getTipoCarta().toString());
+                        }
+                    }
+                }
+            }
+
         } 
     }
 }

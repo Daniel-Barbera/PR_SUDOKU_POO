@@ -39,7 +39,7 @@ public class Cuadricula implements Serializable {
     }
 
     public void mover(Movimiento mov) {
-        this.fichas[mov.getFila()][mov.getColumna()] = mov.getFicha();
+        this.fichas[mov.getColumna()][mov.getFila()] = mov.getFicha();
     }
     
 
